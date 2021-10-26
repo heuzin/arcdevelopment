@@ -76,7 +76,15 @@ const Header: React.FC = (): React.ReactElement => {
 
     const routes = [
         { name: 'Home', link: '/', activeIndex: 0, selectedIndex: 0 },
-        { name: 'Services', link: '/services', activeIndex: 1, selectedIndex: 1 },
+        {
+            name: 'Services',
+            link: '/services',
+            activeIndex: 1,
+            selectedIndex: 1,
+            ariaOwns: anchorEl ? 'simple-menu' : undefined,
+            ariaPopup: anchorEl ? 'true' : undefined,
+            mouseOver: (e: React.MouseEvent<HTMLElement>) => handleClick(e),
+        },
         { name: 'The Revolution', link: '/revolution', activeIndex: 2, selectedIndex: 2 },
         { name: 'About Us', link: '/about', activeIndex: 3, selectedIndex: 3 },
         { name: 'Contact Us', link: '/contact', activeIndex: 4, selectedIndex: 4 },
@@ -102,18 +110,17 @@ const Header: React.FC = (): React.ReactElement => {
     const tabs = (
         <React.Fragment>
             <Tabs value={value} onChange={handleChange} className={classes.tabContainer} indicatorColor="primary">
-                <Tab className={classes.tab} component={Link} to="/" label="Home" />
-                <Tab
-                    aria-owns={anchorEl ? 'simple-menu' : undefined}
-                    className={classes.tab}
-                    component={Link}
-                    onMouseOver={(e: React.MouseEvent<HTMLElement>) => handleClick(e)}
-                    to="/services"
-                    label="Services"
-                />
-                <Tab className={classes.tab} component={Link} to="/revolution" label="The Revolution" />
-                <Tab className={classes.tab} component={Link} to="/about" label="About Us" />
-                <Tab className={classes.tab} component={Link} to="/contact" label="Contact Us" />
+                {routes.map((route, index) => (
+                    <Tab
+                        className={classes.tab}
+                        component={Link}
+                        to={route.link}
+                        label={route.name}
+                        aria-owns={route.ariaOwns}
+                        aria-haspop={route.ariaPopup}
+                        onMouseOver={route.mouseOver}
+                    ></Tab>
+                ))}
             </Tabs>
             <Button variant="contained" color="secondary" className={classes.button}>
                 Free Estimate
